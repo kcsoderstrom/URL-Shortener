@@ -1,0 +1,28 @@
+if __FILE__ == $PROGRAM_NAME
+  print "Input your email: "
+  email = gets.chomp
+  user = User.find(email)
+
+  puts "0. Create shortened URL"
+  puts "1. Visit shortened URL"
+  print "What do you want to do? "
+  begin
+    choice = Integer(gets[0])
+    raise ArgumentError unless [0,1].include?(choice)
+  rescue ArgumentError
+    print "Is that 0 or 1? "
+    retry
+  end
+
+  case choice
+  when 0
+    print "Enter the long URL: "
+    long_url = gets.chomp
+    puts ShortenedUrl.create_for_user_and_long_url!(user, long_url).short_url
+  when 1
+    print "Enter the short URL: "
+    short_url = gets.chomp
+    Launchy.open(ShortenedUrl.find(short_url).long_url)
+  end
+
+end

@@ -17,4 +17,12 @@ class User < ActiveRecord::Base
   through: :visits,
   source: :shortened_url
 
+  def self.find(search_data)
+    if search_data.is_a?(Integer)
+      super(search_data)
+    elsif search_data.is_a?(String)
+      self.where(email: search_data).first
+    end
+  end
+
 end

@@ -16,7 +16,6 @@ class ShortenedUrl < ActiveRecord::Base
 
   has_many :visitors, Proc.new{ distinct }, through: :visits, source: :user
 
-
   def self.random_code
     loop do
       new_url = SecureRandom::urlsafe_base64[0...16]
@@ -30,6 +29,14 @@ class ShortenedUrl < ActiveRecord::Base
       long_url: long_url,
       short_url: "https://windows%20vista.info/#{self.random_code}"
     })
+  end
+
+  def self.find(search_data)
+    if search_data.is_a?(Integer)
+      super
+    elsif search_data.is_a?(String)
+      self.where(short_url: search_data).first
+    end
   end
 
   def num_clicks
