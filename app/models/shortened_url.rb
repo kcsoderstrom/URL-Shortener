@@ -14,7 +14,8 @@ class ShortenedUrl < ActiveRecord::Base
   foreign_key: :shortened_url_id,
   primary_key: :id
 
-  has_many :visitors, through: :visits, source: :user
+  has_many :visitors, Proc.new{ distinct }, through: :visits, source: :user
+
 
   def self.random_code
     loop do
@@ -32,15 +33,15 @@ class ShortenedUrl < ActiveRecord::Base
   end
 
   def num_clicks
-    visitors.count
+    visits.count
   end
 
   def num_uniques
-    visitors.distinct.count
+    visitors.count
   end
 
   def num_recent_uniques(mins = 10)
-    visitors.where("visits.updated_at > '#{mins.minutes.ago}'").distinct.count
+    visitors.where(created_at: mins.minutes.ago..Time.now).count
   end
 
 end
