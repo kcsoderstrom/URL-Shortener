@@ -1,5 +1,6 @@
 class Tagging < ActiveRecord::Base
   validates :tag_topic_id, :shortened_url_id, presence: true
+  validates :
 
   belongs_to :tag_topic,
   class_name: "TagTopic",
